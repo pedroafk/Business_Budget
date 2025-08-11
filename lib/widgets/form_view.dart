@@ -28,10 +28,11 @@ class FormView extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const DropdownForm(),
+              const SizedBox(height: 10),
+
               BlocBuilder<BusinessBloc, BusinessState>(
                 builder: (context, state) {
                   if (state is ProductFormFieldsLoaded) {
-                    // Use uma Key única baseada no tipo de produto
                     return Column(
                       key: ValueKey(state.productType),
                       children: state.fields.map(buildFormField).toList(),

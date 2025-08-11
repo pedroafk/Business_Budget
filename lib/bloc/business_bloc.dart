@@ -6,33 +6,43 @@ part 'business_event.dart';
 part 'business_state.dart';
 
 class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
-  BusinessBloc() : super(BusinessInitial()) {
+  BusinessBloc()
+    : super(
+        ProductFormFieldsLoaded("Inicial", [
+          TextFieldModel("Nome do Produto"),
+          NumberFieldModel("Preço"),
+        ]),
+      ) {
     on<ProductSelected>((event, emit) {
-      List<FormFieldModel> fields;
+      List<FormFieldModel> fields = [
+        TextFieldModel("Nome do Produto"),
+        NumberFieldModel("Preço"),
+      ];
       switch (event.productType) {
         case "Corporate":
-          fields = [
+          fields.addAll([
             NumberFieldModel("Volume Corporativo"),
             TextFieldModel("Contrato"),
             TextFieldModel("SLA"),
-          ];
+          ]);
           break;
         case "Residential":
-          fields = [
+          fields.addAll([
             TextFieldModel("Cor"),
             TextFieldModel("Garantia"),
             TextFieldModel("Acabamento"),
-          ];
+          ]);
           break;
         case "Industrial":
-          fields = [
+          fields.addAll([
             NumberFieldModel("Voltagem"),
             TextFieldModel("Certificação"),
             NumberFieldModel("Capacidade Industrial"),
-          ];
+          ]);
           break;
         default:
-          fields = [];
+          // Só os campos iniciais
+          break;
       }
       emit(ProductFormFieldsLoaded(event.productType, fields));
     });

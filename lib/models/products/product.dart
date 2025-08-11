@@ -5,9 +5,9 @@ abstract class Product {
 }
 
 class IndustrialProduct extends Product {
-  final String voltage;
+  final int voltage;
   final String certification;
-  final String industrialCapacity;
+  final int industrialCapacity;
 
   IndustrialProduct(
     super.name,
@@ -20,7 +20,7 @@ class IndustrialProduct extends Product {
 
 class ResidentialProduct extends Product {
   final String color;
-  final String guarantee;
+  final int guarantee;
   final String finishing;
   ResidentialProduct(
     super.name,
@@ -32,7 +32,7 @@ class ResidentialProduct extends Product {
 }
 
 class CorporateProduct extends Product {
-  final String corporateVolume;
+  final int corporateVolume;
   final String contract;
   final String sla;
   CorporateProduct(
