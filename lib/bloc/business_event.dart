@@ -17,7 +17,7 @@ class ProductSelected extends BusinessEvent {
 
 class RebuildForm extends BusinessEvent {}
 
-class AppliedRuses extends BusinessEvent {}
+class AppliedRules extends BusinessEvent {}
 
 class RecalculatedPrices extends BusinessEvent {}
 

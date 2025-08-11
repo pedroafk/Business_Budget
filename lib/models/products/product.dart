@@ -20,7 +20,7 @@ class IndustrialProduct extends Product {
 
 class ResidentialProduct extends Product {
   final String color;
-  final int guarantee;
+  final String guarantee;
   final String finishing;
   ResidentialProduct(
     super.name,

@@ -1,6 +1,5 @@
 import 'package:business_budget/widgets/components/dropdown_form.dart';
 import 'package:business_budget/widgets/components/form_field_widget.dart';
-import 'package:business_budget/widgets/components/text_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:business_budget/bloc/business_bloc.dart';
@@ -22,9 +21,10 @@ class FormView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TextTitle(
-                text: "Selecione o tipo de produto:",
+              const Text(
+                "Selecione o tipo de produto e preencha os campos abaixo:",
                 textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               const SizedBox(height: 10),
               const DropdownForm(),
