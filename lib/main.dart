@@ -1,7 +1,12 @@
+import 'package:business_budget/bloc/business_bloc.dart';
+import 'package:business_budget/widgets/form_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(create: (context) => BusinessBloc(), child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +16,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Business Budget",
-      home: Scaffold(body: const Center(child: Text(""))),
+      routes: {'/form': (context) => const FormView()},
+      home: Scaffold(
+        body: Center(
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/form');
+              },
+              child: const Text("Iniciar Orçamento"),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

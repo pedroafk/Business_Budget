@@ -7,7 +7,13 @@ sealed class BusinessEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ProductSelected extends BusinessEvent {}
+class ProductSelected extends BusinessEvent {
+  final String productType;
+  const ProductSelected(this.productType);
+
+  @override
+  List<Object> get props => [productType];
+}
 
 class RebuildForm extends BusinessEvent {}
 
