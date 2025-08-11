@@ -1,4 +1,4 @@
-import 'package:business_budget/lib/models/products/product.dart';
+import 'package:business_budget/models/products/product.dart';
 
 abstract class BusinessRule {
   bool apply(Product product);
