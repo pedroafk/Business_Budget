@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:business_budget/models/fields/form_field_model.dart';
-import 'package:business_budget/models/products/product.dart';
 import 'package:business_budget/models/rules/business_rule.dart';
+import 'package:business_budget/controllers/quote_controller.dart';
+import 'package:business_budget/utils/extension.dart';
 
 class DynamicFormWidget extends StatefulWidget {
   final List<FormFieldModel> fields;
@@ -19,6 +20,7 @@ class DynamicFormWidget extends StatefulWidget {
 
 class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   final Map<String, TextEditingController> controllers = {};
+  final QuoteController quoteController = QuoteController();
   String certificationMessage = "";
   double? finalPrice;
 
@@ -66,56 +68,25 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       return;
     }
 
+    // Use StringExtensions para conversão segura
     final name = controllers["Nome do Produto"]?.text ?? '';
-    final price = double.tryParse(controllers["Preço"]?.text ?? '') ?? 0.0;
-    final quantity = int.tryParse(controllers["Quantidade"]?.text ?? '') ?? 0;
-    final deadline = int.tryParse(controllers["Prazo (dias)"]?.text ?? '') ?? 0;
+    final price = StringExtensions().toDouble(controllers["Preço"]?.text ?? '');
+    final quantity = StringExtensions().toInt(
+      controllers["Quantidade"]?.text ?? '',
+    );
+    final deadline = StringExtensions().toInt(
+      controllers["Prazo (dias)"]?.text ?? '',
+    );
 
-    Product product;
-    if (widget.productType == "Industrial") {
-      final voltage = int.tryParse(controllers["Voltagem"]?.text ?? '') ?? 0;
-      final certification = controllers["Certificação"]?.text ?? '';
-      final industrialCapacity =
-          int.tryParse(controllers["Capacidade Industrial"]?.text ?? '') ?? 0;
-      product = IndustrialProduct(
-        name,
-        price,
-        quantity,
-        deadline,
-        voltage: voltage,
-        certification: certification,
-        industrialCapacity: industrialCapacity,
-      );
-    } else if (widget.productType == "Residential") {
-      final color = controllers["Cor"]?.text ?? '';
-      final guarantee = controllers["Garantia"]?.text ?? '';
-      final finishing = controllers["Acabamento"]?.text ?? '';
-      product = ResidentialProduct(
-        name,
-        price,
-        quantity,
-        deadline,
-        color: color,
-        guarantee: guarantee,
-        finishing: finishing,
-      );
-    } else if (widget.productType == "Corporate") {
-      final corporateVolume =
-          int.tryParse(controllers["Volume Corporativo"]?.text ?? '') ?? 0;
-      final contract = controllers["Contrato"]?.text ?? '';
-      final sla = controllers["SLA"]?.text ?? '';
-      product = CorporateProduct(
-        name,
-        price,
-        quantity,
-        deadline,
-        corporateVolume: corporateVolume,
-        contract: contract,
-        sla: sla,
-      );
-    } else {
-      product = GenericProduct(name, price, quantity, deadline);
-    }
+    // Use o QuoteController para montar o produto
+    final product = quoteController.buildProduct(
+      widget.productType,
+      controllers,
+      name: name,
+      price: price,
+      quantity: quantity,
+      deadline: deadline,
+    );
 
     final validationRule = ValidationRule();
     certificationMessage = validationRule.getCertificationMessage(product);
