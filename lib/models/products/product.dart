@@ -4,17 +4,6 @@ abstract class Product {
   final int quantity;
   final int deadline;
   Product(this.name, this.price, this.quantity, this.deadline);
-
-  double get discountedPrice {
-    double finalPrice = price;
-    if (quantity >= 50) {
-      finalPrice *= 0.85;
-    }
-    if (deadline < 7) {
-      finalPrice *= 1.20;
-    }
-    return finalPrice;
-  }
 }
 
 class IndustrialProduct extends Product {

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:business_budget/models/fields/form_field_model.dart';
+import 'package:business_budget/models/rules/business_rule.dart';
 import 'package:equatable/equatable.dart';
 
 part 'business_event.dart';
@@ -20,37 +21,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   }
 
   void _onProductSelected(ProductSelected event, Emitter<BusinessState> emit) {
-    List<FormFieldModel> fields = [
-      TextFieldModel("Nome do Produto"),
-      NumberFieldModel("Preço"),
-      NumberFieldModel("Quantidade"),
-      NumberFieldModel("Prazo (dias)"),
-    ];
-    switch (event.productType) {
-      case "Corporate":
-        fields.addAll([
-          NumberFieldModel("Volume Corporativo"),
-          TextFieldModel("Contrato"),
-          TextFieldModel("SLA"),
-        ]);
-        break;
-      case "Residential":
-        fields.addAll([
-          TextFieldModel("Cor"),
-          TextFieldModel("Garantia"),
-          TextFieldModel("Acabamento"),
-        ]);
-        break;
-      case "Industrial":
-        fields.addAll([
-          NumberFieldModel("Voltagem"),
-          TextFieldModel("Certificação"),
-          NumberFieldModel("Capacidade Industrial"),
-        ]);
-        break;
-      default:
-        break;
-    }
+    final fields = VisibilityRule().getFieldsForProductType(event.productType);
     emit(ProductFormFieldsLoaded(event.productType, fields));
   }
 
