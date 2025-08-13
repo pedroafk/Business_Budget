@@ -2,7 +2,6 @@ import 'package:business_budget/models/products/product.dart';
 import 'package:business_budget/services/factory_service.dart';
 import 'package:business_budget/services/rules_engine.dart';
 import 'package:business_budget/repositories/i_repository.dart';
-import 'package:business_budget/utils/extension.dart';
 import 'package:flutter/material.dart';
 
 class QuoteController {
@@ -10,7 +9,6 @@ class QuoteController {
   final ProductRulesEngine rulesEngine = ProductRulesEngine();
   final ProductRepository productRepository = ProductRepository();
   final RuleRepository ruleRepository = RuleRepository();
-  final ListExtensions listExtensions = ListExtensions();
 
   Product buildProduct(
     String productType,

@@ -18,14 +18,44 @@ class MyApp extends StatelessWidget {
       title: "Business Budget",
       routes: {'/form': (context) => const QuotePage()},
       home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Business Budget"),
+          backgroundColor: Colors.blue.shade700,
+          foregroundColor: Colors.white,
+        ),
         body: Center(
-          child: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/form');
-              },
-              child: const Text("Iniciar Orçamento"),
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.business, size: 80, color: Colors.blue.shade600),
+              const SizedBox(height: 24),
+              Text(
+                "Sistema de Orçamentos Dinâmicos",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              Builder(
+                builder: (context) => ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/form');
+                  },
+                  icon: const Icon(Icons.calculate),
+                  label: const Text("Criar Orçamento"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade600,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
