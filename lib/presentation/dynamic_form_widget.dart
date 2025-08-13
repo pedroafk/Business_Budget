@@ -103,46 +103,251 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...widget.fields.map((field) {
-          final controller = controllers[field.label];
-          if (field is TextFieldModel || field is NumberFieldModel) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  labelText: field.label,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade400),
-                  ),
-                ),
-                keyboardType: field is NumberFieldModel
-                    ? TextInputType.number
-                    : TextInputType.text,
-              ),
-            );
-          }
-          return SizedBox.shrink();
-        }),
-        const SizedBox(height: 24),
-        if (certificationMessage.isNotEmpty)
-          Text(
-            certificationMessage,
-            style: const TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Título da seção de campos
+          const Text(
+            "Preencha os dados do produto",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF2E7D32),
             ),
           ),
-        if (finalPrice != null)
-          Text(
-            "Orçamento final: R\$ ${finalPrice!.toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-      ],
+          const SizedBox(height: 20),
+
+          // Campos do formulário
+          ...widget.fields.map((field) {
+            final controller = controllers[field.label];
+            if (field is TextFieldModel || field is NumberFieldModel) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    labelText: field.label,
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF2E7D32),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    prefixIcon: Icon(
+                      _getIconForField(field.label),
+                      color: const Color(0xFF2E7D32),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1.5,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF2E7D32),
+                        width: 2,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[50],
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  keyboardType: field is NumberFieldModel
+                      ? TextInputType.number
+                      : TextInputType.text,
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+
+          const SizedBox(height: 32),
+
+          // Resultados
+          if (certificationMessage.isNotEmpty || finalPrice != null)
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2E7D32), Color(0xFF4CAF50)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF2E7D32).withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.calculate,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "Resultado do Orçamento",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  if (certificationMessage.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              certificationMessage,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  if (finalPrice != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Valor Total:",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF2E7D32),
+                            ),
+                          ),
+                          Text(
+                            "R\$ ${finalPrice!.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2E7D32),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+          const SizedBox(height: 32),
+        ],
+      ),
     );
+  }
+
+  IconData _getIconForField(String label) {
+    if (label.toLowerCase().contains('nome')) {
+      return Icons.label;
+    }
+    if (label.toLowerCase().contains('preço') ||
+        label.toLowerCase().contains('price')) {
+      return Icons.attach_money;
+    }
+    if (label.toLowerCase().contains('quantidade')) {
+      return Icons.inventory;
+    }
+    if (label.toLowerCase().contains('prazo') ||
+        label.toLowerCase().contains('dias')) {
+      return Icons.schedule;
+    }
+    if (label.toLowerCase().contains('voltagem') ||
+        label.toLowerCase().contains('voltage')) {
+      return Icons.electrical_services;
+    }
+    if (label.toLowerCase().contains('capacidade') ||
+        label.toLowerCase().contains('capacity')) {
+      return Icons.battery_charging_full;
+    }
+    if (label.toLowerCase().contains('categoria') ||
+        label.toLowerCase().contains('category')) {
+      return Icons.category;
+    }
+    if (label.toLowerCase().contains('área') ||
+        label.toLowerCase().contains('area')) {
+      return Icons.square_foot;
+    }
+    if (label.toLowerCase().contains('funcionários') ||
+        label.toLowerCase().contains('employees')) {
+      return Icons.people;
+    }
+    return Icons.edit;
   }
 
   @override
