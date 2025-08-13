@@ -21,7 +21,10 @@ class QuotePage extends StatelessWidget {
               child: BlocBuilder<BusinessBloc, BusinessState>(
                 builder: (context, state) {
                   if (state is ProductFormFieldsLoaded) {
-                    return DynamicFormWidget(fields: state.fields);
+                    return DynamicFormWidget(
+                      fields: state.fields,
+                      productType: state.productType,
+                    );
                   }
                   return SizedBox.shrink();
                 },

@@ -51,3 +51,7 @@ class CorporateProduct extends Product {
     required this.sla,
   });
 }
+
+class GenericProduct extends Product {
+  GenericProduct(super.name, super.price, super.quantity, super.deadline);
+}
