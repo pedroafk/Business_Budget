@@ -11,6 +11,8 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         ProductFormFieldsLoaded("Inicial", [
           TextFieldModel("Nome do Produto"),
           NumberFieldModel("Preço"),
+          NumberFieldModel("Quantidade"),
+          NumberFieldModel("Prazo (dias)"),
         ]),
       ) {
     on<ProductSelected>(_onProductSelected);
@@ -21,6 +23,8 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     List<FormFieldModel> fields = [
       TextFieldModel("Nome do Produto"),
       NumberFieldModel("Preço"),
+      NumberFieldModel("Quantidade"),
+      NumberFieldModel("Prazo (dias)"),
     ];
     switch (event.productType) {
       case "Corporate":

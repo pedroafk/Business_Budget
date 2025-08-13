@@ -1,7 +1,20 @@
 abstract class Product {
   final String name;
   final double price;
-  Product(this.name, this.price);
+  final int quantity;
+  final int deadline;
+  Product(this.name, this.price, this.quantity, this.deadline);
+
+  double get discountedPrice {
+    double finalPrice = price;
+    if (quantity >= 50) {
+      finalPrice *= 0.85;
+    }
+    if (deadline < 7) {
+      finalPrice *= 1.20;
+    }
+    return finalPrice;
+  }
 }
 
 class IndustrialProduct extends Product {
@@ -11,7 +24,9 @@ class IndustrialProduct extends Product {
 
   IndustrialProduct(
     super.name,
-    super.price, {
+    super.price,
+    super.quantity,
+    super.deadline, {
     required this.voltage,
     required this.certification,
     required this.industrialCapacity,
@@ -24,7 +39,9 @@ class ResidentialProduct extends Product {
   final String finishing;
   ResidentialProduct(
     super.name,
-    super.price, {
+    super.price,
+    super.quantity,
+    super.deadline, {
     required this.color,
     required this.guarantee,
     required this.finishing,
@@ -37,7 +54,9 @@ class CorporateProduct extends Product {
   final String sla;
   CorporateProduct(
     super.name,
-    super.price, {
+    super.price,
+    super.quantity,
+    super.deadline, {
     required this.corporateVolume,
     required this.contract,
     required this.sla,

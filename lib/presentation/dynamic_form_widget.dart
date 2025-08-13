@@ -17,7 +17,26 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   @override
   void initState() {
     super.initState();
+    _initControllers(widget.fields);
+  }
+
+  @override
+  void didUpdateWidget(covariant DynamicFormWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldLabels = oldWidget.fields.map((f) => f.label).toSet();
+    final newLabels = widget.fields.map((f) => f.label).toSet();
+
+    for (var label in oldLabels.difference(newLabels)) {
+      controllers[label]?.clear();
+    }
+
     for (var field in widget.fields) {
+      controllers.putIfAbsent(field.label, () => TextEditingController());
+    }
+  }
+
+  void _initControllers(List<FormFieldModel> fields) {
+    for (var field in fields) {
       controllers[field.label] = TextEditingController();
       controllers[field.label]!.addListener(_checkFields);
     }

@@ -6,26 +6,26 @@ abstract class BusinessRule {
 }
 
 class PricingRule extends BusinessRule {
-  final double discount;
-
-  PricingRule(this.discount);
-
   @override
   bool apply(Product product) {
-    return product.price > 1000;
+    return product.quantity >= 50 || product.deadline < 7;
+  }
+
+  double getDiscountedPrice(Product product) {
+    return product.discountedPrice;
   }
 }
 
 class ValidationRule extends BusinessRule {
   @override
   bool apply(Product product) {
-    return product.name.isNotEmpty;
+    throw UnimplementedError();
   }
 }
 
 class VisibilityRule extends BusinessRule {
   @override
   bool apply(Product product) {
-    return product.price > 0;
+    throw UnimplementedError();
   }
 }
