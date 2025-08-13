@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: const Icon(
@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: 0.2),
                             spreadRadius: 2,
                             blurRadius: 10,
                             offset: const Offset(0, 4),
@@ -154,7 +154,7 @@ class MyApp extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(icon, color: Colors.white, size: 24),

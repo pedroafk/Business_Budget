@@ -13,13 +13,20 @@ class PricingRule extends BusinessRule {
   }
 
   double calculateFinalPrice(Product product) {
-    double finalPrice = product.price;
+    // Calcula o valor base: preço unitário × quantidade
+    double basePrice = product.price * product.quantity;
+    double finalPrice = basePrice;
+
+    // Aplica desconto por quantidade (desconto de 15% para pedidos grandes)
     if (product.quantity >= 50) {
-      finalPrice *= 0.85;
+      finalPrice *= 0.85; // 15% de desconto
     }
+
+    // Aplica acréscimo por urgência (20% a mais para prazos curtos)
     if (product.deadline < 7) {
-      finalPrice *= 1.20;
+      finalPrice *= 1.20; // 20% de acréscimo
     }
+
     return finalPrice;
   }
 }

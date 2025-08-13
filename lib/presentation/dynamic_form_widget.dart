@@ -129,7 +129,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.grey.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 8,
                       offset: const Offset(0, 2),
@@ -204,7 +204,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2E7D32).withOpacity(0.3),
+                    color: const Color(0xFF2E7D32).withValues(alpha: 0.3),
                     spreadRadius: 2,
                     blurRadius: 10,
                     offset: const Offset(0, 4),
@@ -219,7 +219,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(
@@ -245,7 +245,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
