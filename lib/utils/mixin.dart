@@ -1,7 +1,5 @@
-abstract class Mixin {}
+mixin ValidatorMixin {}
 
-mixin ValidatorMixin implements Mixin {}
+mixin CalculatorMixin {}
 
-mixin CalculatorMixin implements Mixin {}
-
-mixin FormatterMixin implements Mixin {}
+mixin FormatterMixin {}

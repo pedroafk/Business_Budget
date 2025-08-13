@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:business_budget/models/fields/form_field_model.dart';
 import 'package:business_budget/models/rules/business_rule.dart';
 import 'package:business_budget/controllers/quote_controller.dart';
-import 'package:business_budget/utils/extension.dart';
 
 class DynamicFormWidget extends StatefulWidget {
   final List<FormFieldModel> fields;
@@ -21,6 +20,8 @@ class DynamicFormWidget extends StatefulWidget {
 class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   final Map<String, TextEditingController> controllers = {};
   final QuoteController quoteController = QuoteController();
+
+  // Mantém o estado local para evitar problemas de reconstrução
   String certificationMessage = "";
   double? finalPrice;
 
@@ -56,10 +57,12 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   }
 
   void _calculateResult() {
+    // Calcula localmente em vez de usar o BLoC para evitar loops
     final allFilled = widget.fields.every((field) {
       final value = controllers[field.label]?.text ?? '';
       return value.isNotEmpty;
     });
+
     if (!allFilled) {
       setState(() {
         certificationMessage = "";
@@ -68,33 +71,34 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       return;
     }
 
-    // Use StringExtensions para conversão segura
-    final name = controllers["Nome do Produto"]?.text ?? '';
-    final price = StringExtensions().toDouble(controllers["Preço"]?.text ?? '');
-    final quantity = StringExtensions().toInt(
-      controllers["Quantidade"]?.text ?? '',
-    );
-    final deadline = StringExtensions().toInt(
-      controllers["Prazo (dias)"]?.text ?? '',
-    );
+    // Coleta todos os valores dos campos
+    Map<String, String> allFields = {};
+    for (var field in widget.fields) {
+      allFields[field.label] = controllers[field.label]?.text ?? '';
+    }
 
-    // Use o QuoteController para montar o produto
+    // Calcula o produto e aplica regras localmente
     final product = quoteController.buildProduct(
       widget.productType,
       controllers,
-      name: name,
-      price: price,
-      quantity: quantity,
-      deadline: deadline,
+      name: allFields["Nome do Produto"] ?? '',
+      price: double.tryParse(allFields["Preço"] ?? '') ?? 0.0,
+      quantity: int.tryParse(allFields["Quantidade"] ?? '') ?? 0,
+      deadline: int.tryParse(allFields["Prazo (dias)"] ?? '') ?? 0,
     );
 
     final validationRule = ValidationRule();
-    certificationMessage = validationRule.getCertificationMessage(product);
+    final newCertificationMessage = validationRule.getCertificationMessage(
+      product,
+    );
 
     final pricingRule = PricingRule();
-    finalPrice = pricingRule.calculateFinalPrice(product);
+    final newFinalPrice = pricingRule.calculateFinalPrice(product);
 
-    setState(() {});
+    setState(() {
+      certificationMessage = newCertificationMessage;
+      finalPrice = newFinalPrice;
+    });
   }
 
   @override

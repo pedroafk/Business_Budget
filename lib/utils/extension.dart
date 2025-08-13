@@ -1,10 +1,8 @@
 import 'package:business_budget/models/products/product.dart';
 
-class Extension {}
+class ProductExtensions {}
 
-class ProductExtensions extends Extension {}
-
-class ListExtensions extends Extension {
+class ListExtensions {
   // Exemplo: filtrar produtos por tipo
   List<Product> filterByType(List<Product> products, String type) {
     switch (type) {
@@ -20,7 +18,7 @@ class ListExtensions extends Extension {
   }
 }
 
-class StringExtensions extends Extension {
+class StringExtensions {
   double toDouble(String value) => double.tryParse(value) ?? 0.0;
   int toInt(String value) => int.tryParse(value) ?? 0;
 }

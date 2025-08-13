@@ -18,6 +18,34 @@ final class ProductFormFieldsLoaded extends BusinessState {
   List<Object> get props => [productType, fields];
 }
 
+final class FormUpdatedState extends BusinessState {
+  final String productType;
+  final List<FormFieldModel> fields;
+  final Map<String, String> allFieldsData;
+  final String certificationMessage;
+  final double finalPrice;
+  final bool isValid;
+
+  const FormUpdatedState({
+    required this.productType,
+    required this.fields,
+    required this.allFieldsData,
+    required this.certificationMessage,
+    required this.finalPrice,
+    required this.isValid,
+  });
+
+  @override
+  List<Object> get props => [
+    productType,
+    fields,
+    allFieldsData,
+    certificationMessage,
+    finalPrice,
+    isValid,
+  ];
+}
+
 final class FieldsCompletedState extends BusinessState {
   @override
   List<Object> get props => [];
