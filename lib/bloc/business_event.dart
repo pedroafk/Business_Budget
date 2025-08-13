@@ -24,3 +24,5 @@ class RecalculatedPrices extends BusinessEvent {}
 class ExecutedValidations extends BusinessEvent {}
 
 class UpdatedInterface extends BusinessEvent {}
+
+class AllFieldsFilled extends BusinessEvent {}

@@ -17,3 +17,8 @@ final class ProductFormFieldsLoaded extends BusinessState {
   @override
   List<Object> get props => [productType, fields];
 }
+
+final class FieldsCompletedState extends BusinessState {
+  @override
+  List<Object> get props => [];
+}

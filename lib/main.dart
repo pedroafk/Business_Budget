@@ -1,5 +1,5 @@
 import 'package:business_budget/bloc/business_bloc.dart';
-import 'package:business_budget/widgets/form_view.dart';
+import 'package:business_budget/presentation/quote_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Business Budget",
-      routes: {'/form': (context) => const FormView()},
+      routes: {'/form': (context) => const QuotePage()},
       home: Scaffold(
         body: Center(
           child: Builder(
