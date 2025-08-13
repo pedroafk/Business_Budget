@@ -55,34 +55,34 @@ class VisibilityRule extends BusinessRule {
   }
 
   List<FormFieldModel> getFieldsForProductType(String productType) {
-    // Campos básicos
+    // Campos básicos com tipos corretos
     List<FormFieldModel> fields = [
-      TextFieldModel("Nome do Produto"),
-      NumberFieldModel("Preço"),
-      NumberFieldModel("Quantidade"),
-      NumberFieldModel("Prazo (dias)"),
+      TextFieldModel("Nome do Produto"), // string
+      DoubleFieldModel("Preço"), // double
+      IntFieldModel("Quantidade"), // int
+      IntFieldModel("Prazo (dias)"), // int
     ];
 
     switch (productType) {
       case "Corporate":
         fields.addAll([
-          NumberFieldModel("Volume Corporativo"),
-          TextFieldModel("Contrato"),
-          TextFieldModel("SLA"),
+          TextFieldModel("Volume Corporativo"), // string
+          TextFieldModel("Contrato"), // string
+          TextFieldModel("SLA"), // string
         ]);
         break;
       case "Residential":
         fields.addAll([
-          TextFieldModel("Cor"),
-          TextFieldModel("Garantia"),
-          TextFieldModel("Acabamento"),
+          TextFieldModel("Cor"), // string
+          TextFieldModel("Garantia"), // string
+          TextFieldModel("Acabamento"), // string
         ]);
         break;
       case "Industrial":
         fields.addAll([
-          NumberFieldModel("Voltagem"),
-          TextFieldModel("Certificação"),
-          NumberFieldModel("Capacidade Industrial"),
+          DoubleFieldModel("Voltagem"), // double
+          TextFieldModel("Certificação"), // string
+          TextFieldModel("Capacidade Industrial"), // string
         ]);
         break;
       default:

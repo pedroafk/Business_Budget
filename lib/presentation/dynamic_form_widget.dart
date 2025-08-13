@@ -19,6 +19,7 @@ class DynamicFormWidget extends StatefulWidget {
 
 class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   final Map<String, TextEditingController> controllers = {};
+  final Map<String, String?> validationErrors = {};
   final QuoteController quoteController = QuoteController();
 
   // Mantém o estado local para evitar problemas de reconstrução
@@ -57,6 +58,15 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   }
 
   void _calculateResult() {
+    // Verifica se um tipo de produto foi selecionado
+    if (widget.productType == "Inicial" || widget.fields.isEmpty) {
+      setState(() {
+        certificationMessage = "";
+        finalPrice = null;
+      });
+      return;
+    }
+
     // Calcula localmente em vez de usar o BLoC para evitar loops
     final allFilled = widget.fields.every((field) {
       final value = controllers[field.label]?.text ?? '';
@@ -121,7 +131,10 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           // Campos do formulário
           ...widget.fields.map((field) {
             final controller = controllers[field.label];
-            if (field is TextFieldModel || field is NumberFieldModel) {
+            if (field is TextFieldModel ||
+                field is NumberFieldModel ||
+                field is DoubleFieldModel ||
+                field is IntFieldModel) {
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
@@ -136,7 +149,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                     ),
                   ],
                 ),
-                child: TextField(
+                child: TextFormField(
                   controller: controller,
                   decoration: InputDecoration(
                     labelText: field.label,
@@ -169,6 +182,14 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                         width: 2,
                       ),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.red, width: 2),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.red, width: 2),
+                    ),
                     filled: true,
                     fillColor: Colors.grey[50],
                     contentPadding: const EdgeInsets.symmetric(
@@ -180,9 +201,14 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
-                  keyboardType: field is NumberFieldModel
-                      ? TextInputType.number
-                      : TextInputType.text,
+                  keyboardType: _getKeyboardType(field),
+                  validator: (value) => field.validate(value ?? ''),
+                  onChanged: (value) {
+                    setState(() {
+                      validationErrors[field.label] = field.validate(value);
+                    });
+                    _calculateResult();
+                  },
                 ),
               );
             }
@@ -348,6 +374,16 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       return Icons.people;
     }
     return Icons.edit;
+  }
+
+  TextInputType _getKeyboardType(FormFieldModel field) {
+    if (field is DoubleFieldModel) {
+      return const TextInputType.numberWithOptions(decimal: true);
+    }
+    if (field is IntFieldModel || field is NumberFieldModel) {
+      return TextInputType.number;
+    }
+    return TextInputType.text;
   }
 
   @override
