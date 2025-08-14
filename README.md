@@ -298,6 +298,9 @@ classDiagram
 - **Extensível**: Fácil adição de novos tipos de produto
 - **Configurável**: Regras podem ser modificadas sem código
 
-## 👥 Autores
+## 👥 Autor
 
-- **Pedro** - *Desenvolvimento inicial* - [pedroafk](https://github.com/pedroafk)
+- **Pedro Figueiredo**
+    - Email: pedro.pessoal1996@gmail.com
+    - [GitHub](https://github.com/)
+    - [LinkedIn](https://www.linkedin.com/in/pedro-figueiredo-15762713b/)
