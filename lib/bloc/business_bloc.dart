@@ -3,13 +3,23 @@ import 'package:business_budget/models/fields/form_field_model.dart';
 import 'package:business_budget/models/rules/business_rule.dart';
 import 'package:business_budget/models/products/product.dart';
 import 'package:business_budget/services/factory_service.dart';
+import 'package:business_budget/services/rules_engine.dart';
+import 'package:business_budget/strategies/business_strategies.dart';
+import 'package:business_budget/utils/mixins.dart';
 import 'package:equatable/equatable.dart';
 
 part 'business_event.dart';
 part 'business_state.dart';
 
-class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
+class BusinessBloc extends Bloc<BusinessEvent, BusinessState>
+    with CalculatorMixin {
   final ProductFactoryService _factoryService = ProductFactoryService();
+  final RulesEngine<Product> _rulesEngine = RulesEngine<Product>();
+  final Map<String, IValidationStrategy> _validationStrategies = {
+    'Industrial': IndustrialValidationStrategy(),
+    'Residential': ResidentialValidationStrategy(),
+    'Corporate': CorporateValidationStrategy(),
+  };
 
   BusinessBloc()
     : super(
@@ -51,13 +61,28 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
           event.productType,
         );
 
-        final validationRule = ValidationRule();
-        final certificationMessage = validationRule.getCertificationMessage(
-          product,
+        final validationStrategy = _validationStrategies[event.productType];
+        final certificationMessage =
+            validationStrategy?.getValidationMessage(product) ?? "";
+
+        final rulesResult = _rulesEngine.processRules(product);
+        final priceAdjustments =
+            rulesResult['price_adjustments'] as Map<String, double>? ?? {};
+
+        double adjustedPrice = calculateFinalPrice(
+          basePrice: product.price,
+          quantity: product.quantity,
+          deadline: product.deadline,
         );
 
-        final pricingRule = PricingRule();
-        final finalPrice = pricingRule.calculateFinalPrice(product);
+        if (priceAdjustments.isNotEmpty) {
+          adjustedPrice += priceAdjustments.values.fold(
+            0.0,
+            (sum, adj) => sum + adj,
+          );
+        }
+
+        final finalPrice = adjustedPrice;
 
         emit(
           FormUpdatedState(
@@ -89,16 +114,16 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     final params = {
       'type': productType,
       'name': fields["Nome do Produto"] ?? '',
-      'price': _toDouble(fields["Preço"] ?? ''),
-      'quantity': _toInt(fields["Quantidade"] ?? ''),
-      'deadline': _toInt(fields["Prazo (dias)"] ?? ''),
-      'voltage': _toInt(fields['Voltagem'] ?? ''),
+      'price': fields["Preço"]?.toDoubleValue() ?? 0.0,
+      'quantity': fields["Quantidade"]?.toIntValue() ?? 0,
+      'deadline': fields["Prazo (dias)"]?.toIntValue() ?? 0,
+      'voltage': fields['Voltagem']?.toIntValue() ?? 0,
       'certification': fields['Certificação'] ?? '',
-      'industrialCapacity': _toInt(fields['Capacidade Industrial'] ?? ''),
+      'industrialCapacity': fields['Capacidade Industrial']?.toIntValue() ?? 0,
       'color': fields['Cor'] ?? '',
       'guarantee': fields['Garantia'] ?? '',
       'finishing': fields['Acabamento'] ?? '',
-      'corporateVolume': _toInt(fields['Volume Corporativo'] ?? ''),
+      'corporateVolume': fields['Volume Corporativo']?.toIntValue() ?? 0,
       'contract': fields['Contrato'] ?? '',
       'sla': fields['SLA'] ?? '',
     };
@@ -108,29 +133,12 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   bool _validateAllFields(Map<String, String> fields, String productType) {
     if (!_hasBasicFields(fields)) return false;
 
-    switch (productType) {
-      case 'Industrial':
-        return fields['Voltagem']?.isNotEmpty == true &&
-            fields['Certificação']?.isNotEmpty == true &&
-            fields['Capacidade Industrial']?.isNotEmpty == true;
-      case 'Residential':
-        return fields['Cor']?.isNotEmpty == true &&
-            fields['Garantia']?.isNotEmpty == true &&
-            fields['Acabamento']?.isNotEmpty == true;
-      case 'Corporate':
-        return fields['Volume Corporativo']?.isNotEmpty == true &&
-            fields['Contrato']?.isNotEmpty == true &&
-            fields['SLA']?.isNotEmpty == true;
-      default:
-        return true;
+    final strategy = _validationStrategies[productType];
+    if (strategy != null) {
+      final product = _createProductFromFields(fields, productType);
+      return strategy.validate(product);
     }
-  }
 
-  double _toDouble(String value) {
-    return double.tryParse(value.replaceAll(',', '.')) ?? 0.0;
-  }
-
-  int _toInt(String value) {
-    return int.tryParse(value) ?? 0;
+    return true;
   }
 }
