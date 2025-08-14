@@ -59,13 +59,3 @@ class NumberFieldModel extends FormFieldModel {
     return null;
   }
 }
-
-class SelectFieldModel extends FormFieldModel {
-  SelectFieldModel(super.label);
-
-  @override
-  String? validate(String value) {
-    if (value.isEmpty) return 'Campo obrigatório';
-    return null;
-  }
-}

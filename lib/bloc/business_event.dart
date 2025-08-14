@@ -31,34 +31,3 @@ class FieldChanged extends BusinessEvent {
   @override
   List<Object> get props => [fieldName, value, allFields, productType];
 }
-
-class ValidateForm extends BusinessEvent {
-  final Map<String, String> formData;
-  final String productType;
-
-  const ValidateForm({required this.formData, required this.productType});
-
-  @override
-  List<Object> get props => [formData, productType];
-}
-
-class CalculatePricing extends BusinessEvent {
-  final Product product;
-
-  const CalculatePricing(this.product);
-
-  @override
-  List<Object> get props => [product];
-}
-
-class RebuildForm extends BusinessEvent {}
-
-class AppliedRules extends BusinessEvent {}
-
-class RecalculatedPrices extends BusinessEvent {}
-
-class ExecutedValidations extends BusinessEvent {}
-
-class UpdatedInterface extends BusinessEvent {}
-
-class AllFieldsFilled extends BusinessEvent {}

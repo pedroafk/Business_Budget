@@ -19,7 +19,6 @@ class DynamicFormWidget extends StatefulWidget {
 
 class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   final Map<String, TextEditingController> controllers = {};
-  final Map<String, String?> validationErrors = {};
   final QuoteController quoteController = QuoteController();
 
   String certificationMessage = "";
@@ -197,9 +196,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
                   keyboardType: _getKeyboardType(field),
                   validator: (value) => field.validate(value ?? ''),
                   onChanged: (value) {
-                    setState(() {
-                      validationErrors[field.label] = field.validate(value);
-                    });
                     _calculateResult();
                   },
                 ),

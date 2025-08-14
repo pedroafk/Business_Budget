@@ -3,7 +3,6 @@ import 'package:business_budget/models/fields/form_field_model.dart';
 import 'package:business_budget/models/rules/business_rule.dart';
 import 'package:business_budget/models/products/product.dart';
 import 'package:business_budget/services/factory_service.dart';
-import 'package:business_budget/utils/extension.dart';
 import 'package:equatable/equatable.dart';
 
 part 'business_event.dart';
@@ -11,7 +10,6 @@ part 'business_state.dart';
 
 class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   final ProductFactoryService _factoryService = ProductFactoryService();
-  final StringExtensions _stringExtensions = StringExtensions();
 
   BusinessBloc()
     : super(
@@ -23,19 +21,12 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         ]),
       ) {
     on<ProductSelected>(_onProductSelected);
-    on<AllFieldsFilled>(_onAllFieldsFilled);
     on<FieldChanged>(_onFieldChanged);
-    on<ValidateForm>(_onValidateForm);
-    on<CalculatePricing>(_onCalculatePricing);
   }
 
   void _onProductSelected(ProductSelected event, Emitter<BusinessState> emit) {
     final fields = VisibilityRule().getFieldsForProductType(event.productType);
     emit(ProductFormFieldsLoaded(event.productType, fields));
-  }
-
-  void _onAllFieldsFilled(AllFieldsFilled event, Emitter<BusinessState> emit) {
-    emit(FieldsCompletedState());
   }
 
   void _onFieldChanged(FieldChanged event, Emitter<BusinessState> emit) {
@@ -84,18 +75,6 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  void _onValidateForm(ValidateForm event, Emitter<BusinessState> emit) {
-    _validateAllFields(event.formData, event.productType);
-  }
-
-  void _onCalculatePricing(
-    CalculatePricing event,
-    Emitter<BusinessState> emit,
-  ) {
-    final pricingRule = PricingRule();
-    pricingRule.calculateFinalPrice(event.product);
-  }
-
   bool _hasBasicFields(Map<String, String> fields) {
     return fields["Nome do Produto"]?.isNotEmpty == true &&
         fields["Preço"]?.isNotEmpty == true &&
@@ -110,20 +89,16 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     final params = {
       'type': productType,
       'name': fields["Nome do Produto"] ?? '',
-      'price': _stringExtensions.toDouble(fields["Preço"] ?? ''),
-      'quantity': _stringExtensions.toInt(fields["Quantidade"] ?? ''),
-      'deadline': _stringExtensions.toInt(fields["Prazo (dias)"] ?? ''),
-      'voltage': _stringExtensions.toInt(fields['Voltagem'] ?? ''),
+      'price': _toDouble(fields["Preço"] ?? ''),
+      'quantity': _toInt(fields["Quantidade"] ?? ''),
+      'deadline': _toInt(fields["Prazo (dias)"] ?? ''),
+      'voltage': _toInt(fields['Voltagem'] ?? ''),
       'certification': fields['Certificação'] ?? '',
-      'industrialCapacity': _stringExtensions.toInt(
-        fields['Capacidade Industrial'] ?? '',
-      ),
+      'industrialCapacity': _toInt(fields['Capacidade Industrial'] ?? ''),
       'color': fields['Cor'] ?? '',
       'guarantee': fields['Garantia'] ?? '',
       'finishing': fields['Acabamento'] ?? '',
-      'corporateVolume': _stringExtensions.toInt(
-        fields['Volume Corporativo'] ?? '',
-      ),
+      'corporateVolume': _toInt(fields['Volume Corporativo'] ?? ''),
       'contract': fields['Contrato'] ?? '',
       'sla': fields['SLA'] ?? '',
     };
@@ -149,5 +124,13 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       default:
         return true;
     }
+  }
+
+  double _toDouble(String value) {
+    return double.tryParse(value.replaceAll(',', '.')) ?? 0.0;
+  }
+
+  int _toInt(String value) {
+    return int.tryParse(value) ?? 0;
   }
 }

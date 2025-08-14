@@ -7,8 +7,6 @@ sealed class BusinessState extends Equatable {
   List<Object> get props => [];
 }
 
-final class BusinessInitial extends BusinessState {}
-
 final class ProductFormFieldsLoaded extends BusinessState {
   final String productType;
   final List<FormFieldModel> fields;
@@ -44,9 +42,4 @@ final class FormUpdatedState extends BusinessState {
     finalPrice,
     isValid,
   ];
-}
-
-final class FieldsCompletedState extends BusinessState {
-  @override
-  List<Object> get props => [];
 }
