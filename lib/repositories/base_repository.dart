@@ -1,6 +1,3 @@
-// Repository genérico type-safe - versão simplificada para o teste
-
-/// Modelo base para entidades
 abstract class BaseModel {
   String get id;
   DateTime get createdAt;
@@ -12,35 +9,25 @@ abstract class BaseModel {
   String toString();
 }
 
-/// Interface genérica para repositórios type-safe
 abstract class IRepository<T extends BaseModel> {
-  /// Busca uma entidade por ID
   Future<T?> findById(String id);
 
-  /// Busca todas as entidades
   Future<List<T>> findAll();
 
-  /// Busca entidades com filtros
   Future<List<T>> findWhere(Map<String, dynamic> filters);
 
-  /// Salva uma entidade
   Future<T> save(T entity);
 
-  /// Remove uma entidade por ID
   Future<bool> deleteById(String id);
 
-  /// Conta o número de entidades
   Future<int> count([Map<String, dynamic>? filters]);
 }
 
-/// Implementação base em memória
 abstract class InMemoryRepository<T extends BaseModel>
     implements IRepository<T> {
   final Map<String, T> _storage = {};
 
-  InMemoryRepository(
-    String entityName,
-  ); // Parâmetro mantido para compatibilidade
+  InMemoryRepository(String entityName);
 
   @override
   Future<T?> findById(String id) async {
@@ -69,12 +56,10 @@ abstract class InMemoryRepository<T extends BaseModel>
 
         final itemValue = itemJson[key];
 
-        // Comparação exata
         if (value is String || value is num || value is bool) {
           return itemValue == value;
         }
 
-        // Comparação de range para números
         if (value is Map &&
             value.containsKey('min') &&
             value.containsKey('max')) {
@@ -112,9 +97,7 @@ abstract class InMemoryRepository<T extends BaseModel>
   }
 }
 
-/// Utilitários para repositórios
 class RepositoryUtils {
-  /// Gera ID único
   static String generateId() {
     return DateTime.now().millisecondsSinceEpoch.toString();
   }

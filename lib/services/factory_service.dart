@@ -4,7 +4,6 @@ abstract class FactoryService<T> {
   T create(Map<String, dynamic> params);
 }
 
-// Exemplo para produtos
 class ProductFactoryService extends FactoryService<Product> {
   @override
   Product create(Map<String, dynamic> params) {

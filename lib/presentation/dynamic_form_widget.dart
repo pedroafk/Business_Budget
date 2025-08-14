@@ -22,7 +22,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   final Map<String, String?> validationErrors = {};
   final QuoteController quoteController = QuoteController();
 
-  // Mantém o estado local para evitar problemas de reconstrução
   String certificationMessage = "";
   double? finalPrice;
 
@@ -58,7 +57,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
   }
 
   void _calculateResult() {
-    // Verifica se um tipo de produto foi selecionado
     if (widget.productType == "Inicial" || widget.fields.isEmpty) {
       setState(() {
         certificationMessage = "";
@@ -67,7 +65,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       return;
     }
 
-    // Calcula localmente em vez de usar o BLoC para evitar loops
     final allFilled = widget.fields.every((field) {
       final value = controllers[field.label]?.text ?? '';
       return value.isNotEmpty;
@@ -81,13 +78,11 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       return;
     }
 
-    // Coleta todos os valores dos campos
     Map<String, String> allFields = {};
     for (var field in widget.fields) {
       allFields[field.label] = controllers[field.label]?.text ?? '';
     }
 
-    // Calcula o produto e aplica regras localmente
     final product = quoteController.buildProduct(
       widget.productType,
       controllers,
@@ -117,7 +112,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Título da seção de campos
           const Text(
             "Preencha os dados do produto",
             style: TextStyle(
@@ -128,7 +122,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
           ),
           const SizedBox(height: 20),
 
-          // Campos do formulário
           ...widget.fields.map((field) {
             final controller = controllers[field.label];
             if (field is TextFieldModel ||
@@ -217,7 +210,6 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
 
           const SizedBox(height: 32),
 
-          // Resultados
           if (certificationMessage.isNotEmpty || finalPrice != null)
             Container(
               padding: const EdgeInsets.all(20),

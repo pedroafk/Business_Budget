@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo/Ícone principal
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -52,7 +51,6 @@ class MyApp extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // Título
                   const Text(
                     "Business Budget",
                     style: TextStyle(
@@ -66,7 +64,6 @@ class MyApp extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // Subtítulo
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: const Text(
@@ -83,7 +80,6 @@ class MyApp extends StatelessWidget {
 
                   const SizedBox(height: 48),
 
-                  // Botão principal
                   Builder(
                     builder: (context) => Container(
                       decoration: BoxDecoration(
@@ -127,7 +123,6 @@ class MyApp extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // Features
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Row(

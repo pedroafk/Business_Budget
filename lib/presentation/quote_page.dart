@@ -36,7 +36,6 @@ class QuotePage extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              // Header com ícone e descrição
               Container(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -67,7 +66,6 @@ class QuotePage extends StatelessWidget {
                 ),
               ),
 
-              // Formulário em card
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(top: 16),
@@ -83,7 +81,6 @@ class QuotePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Título da seção
                         const Text(
                           "Selecione o tipo de produto",
                           style: TextStyle(
@@ -94,11 +91,9 @@ class QuotePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        // Dropdown
                         DropdownForm(),
                         const SizedBox(height: 24),
 
-                        // Formulário dinâmico
                         Expanded(
                           child: BlocBuilder<BusinessBloc, BusinessState>(
                             builder: (context, state) {

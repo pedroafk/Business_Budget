@@ -39,13 +39,11 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   }
 
   void _onFieldChanged(FieldChanged event, Emitter<BusinessState> emit) {
-    // Estados interdependentes: quando um campo muda, recalcula tudo
     final currentState = state;
     if (currentState is ProductFormFieldsLoaded ||
         currentState is FormUpdatedState) {
       List<FormFieldModel> currentFields;
 
-      // Pega os campos do estado atual
       if (currentState is ProductFormFieldsLoaded) {
         currentFields = currentState.fields;
       } else if (currentState is FormUpdatedState) {
@@ -54,31 +52,26 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         return;
       }
 
-      // Verifica se todos os campos básicos estão preenchidos
       final hasBasicFields = _hasBasicFields(event.allFields);
 
       if (hasBasicFields) {
-        // Cria o produto para aplicar as regras
         final product = _createProductFromFields(
           event.allFields,
           event.productType,
         );
 
-        // Aplica regras de validação
         final validationRule = ValidationRule();
         final certificationMessage = validationRule.getCertificationMessage(
           product,
         );
 
-        // Aplica regras de preço
         final pricingRule = PricingRule();
         final finalPrice = pricingRule.calculateFinalPrice(product);
 
-        // Emite estado com cálculos atualizados MANTENDO os campos
         emit(
           FormUpdatedState(
             productType: event.productType,
-            fields: currentFields, // Mantém os campos atuais
+            fields: currentFields,
             allFieldsData: event.allFields,
             certificationMessage: certificationMessage,
             finalPrice: finalPrice,
@@ -86,7 +79,6 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
           ),
         );
       } else {
-        // Se campos básicos não estão preenchidos, mantém o estado atual mas sem cálculos
         emit(ProductFormFieldsLoaded(event.productType, currentFields));
       }
     }
@@ -94,7 +86,6 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
   void _onValidateForm(ValidateForm event, Emitter<BusinessState> emit) {
     _validateAllFields(event.formData, event.productType);
-    // Implementar validação específica se necessário
   }
 
   void _onCalculatePricing(
@@ -103,7 +94,6 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   ) {
     final pricingRule = PricingRule();
     pricingRule.calculateFinalPrice(event.product);
-    // Implementar emissão de estado com preço calculado
   }
 
   bool _hasBasicFields(Map<String, String> fields) {
@@ -141,10 +131,8 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   }
 
   bool _validateAllFields(Map<String, String> fields, String productType) {
-    // Implementar validação completa baseada no tipo de produto
     if (!_hasBasicFields(fields)) return false;
 
-    // Validações específicas por tipo
     switch (productType) {
       case 'Industrial':
         return fields['Voltagem']?.isNotEmpty == true &&

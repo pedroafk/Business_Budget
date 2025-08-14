@@ -1,9 +1,7 @@
-// Repositórios específicos usando a base genérica type-safe
 import '../models/products/product.dart';
 import '../models/rules/business_rule.dart';
 import 'base_repository.dart';
 
-/// Modelo para Product implementando BaseModel
 class ProductModel extends BaseModel {
   final Product product;
   final String _id;
@@ -39,7 +37,6 @@ class ProductModel extends BaseModel {
       'price': product.price,
       'quantity': product.quantity,
       'deadline': product.deadline,
-      // Campos específicos baseados no tipo
       if (product is IndustrialProduct) ...{
         'voltage': (product as IndustrialProduct).voltage,
         'certification': (product as IndustrialProduct).certification,
@@ -64,16 +61,13 @@ class ProductModel extends BaseModel {
   }
 }
 
-/// Repository específico para Products - só funcionalidades essenciais
 class ProductRepository extends InMemoryRepository<ProductModel> {
   ProductRepository() : super('Product');
 
-  /// Busca produtos por tipo (essencial para o teste)
   Future<List<ProductModel>> findByType(String productType) async {
     return findWhere({'productType': productType});
   }
 
-  /// Busca produtos por faixa de preço (essencial para regras)
   Future<List<ProductModel>> findByPriceRange(
     double minPrice,
     double maxPrice,
@@ -83,20 +77,17 @@ class ProductRepository extends InMemoryRepository<ProductModel> {
     });
   }
 
-  /// Busca produtos urgentes (essencial para regra de urgência)
   Future<List<ProductModel>> findUrgentProducts() async {
     final allProducts = await findAll();
     return allProducts.where((p) => p.product.deadline < 7).toList();
   }
 
-  /// Busca produtos com desconto volume (essencial para regra de volume)
   Future<List<ProductModel>> findVolumeDiscountProducts() async {
     final allProducts = await findAll();
     return allProducts.where((p) => p.product.quantity >= 50).toList();
   }
 }
 
-/// Modelo para BusinessRule implementando BaseModel
 class BusinessRuleModel extends BaseModel {
   final BusinessRule businessRule;
   final String _id;
@@ -137,21 +128,17 @@ class BusinessRuleModel extends BaseModel {
   }
 }
 
-/// Repository específico para BusinessRules
 class RuleRepository extends InMemoryRepository<BusinessRuleModel> {
   RuleRepository() : super('BusinessRule');
 
-  /// Busca regras por tipo
   Future<List<BusinessRuleModel>> findByType(String ruleType) async {
     return findWhere({'ruleType': ruleType});
   }
 }
 
-/// Factory para repositórios
 class RepositoryFactory {
   static final Map<Type, dynamic> _repositories = {};
 
-  /// Obtém repository para um tipo específico
   static T getRepository<T>() {
     if (_repositories.containsKey(T)) {
       return _repositories[T] as T;
@@ -171,7 +158,6 @@ class RepositoryFactory {
     return repository as T;
   }
 
-  /// Limpa cache de repositories
   static void clearRepositories() {
     _repositories.clear();
   }

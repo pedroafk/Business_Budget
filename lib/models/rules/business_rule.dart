@@ -13,18 +13,15 @@ class PricingRule extends BusinessRule {
   }
 
   double calculateFinalPrice(Product product) {
-    // Calcula o valor base: preço unitário × quantidade
     double basePrice = product.price * product.quantity;
     double finalPrice = basePrice;
 
-    // Aplica desconto por quantidade (desconto de 15% para pedidos grandes)
     if (product.quantity >= 50) {
-      finalPrice *= 0.85; // 15% de desconto
+      finalPrice *= 0.85;
     }
 
-    // Aplica acréscimo por urgência (20% a mais para prazos curtos)
     if (product.deadline < 7) {
-      finalPrice *= 1.20; // 20% de acréscimo
+      finalPrice *= 1.20;
     }
 
     return finalPrice;
@@ -55,34 +52,33 @@ class VisibilityRule extends BusinessRule {
   }
 
   List<FormFieldModel> getFieldsForProductType(String productType) {
-    // Campos básicos com tipos corretos
     List<FormFieldModel> fields = [
-      TextFieldModel("Nome do Produto"), // string
-      DoubleFieldModel("Preço"), // double
-      IntFieldModel("Quantidade"), // int
-      IntFieldModel("Prazo (dias)"), // int
+      TextFieldModel("Nome do Produto"),
+      DoubleFieldModel("Preço"),
+      IntFieldModel("Quantidade"),
+      IntFieldModel("Prazo (dias)"),
     ];
 
     switch (productType) {
       case "Corporate":
         fields.addAll([
-          TextFieldModel("Volume Corporativo"), // string
-          TextFieldModel("Contrato"), // string
-          TextFieldModel("SLA"), // string
+          TextFieldModel("Volume Corporativo"),
+          TextFieldModel("Contrato"),
+          TextFieldModel("SLA"),
         ]);
         break;
       case "Residential":
         fields.addAll([
-          TextFieldModel("Cor"), // string
-          TextFieldModel("Garantia"), // string
-          TextFieldModel("Acabamento"), // string
+          TextFieldModel("Cor"),
+          TextFieldModel("Garantia"),
+          TextFieldModel("Acabamento"),
         ]);
         break;
       case "Industrial":
         fields.addAll([
-          DoubleFieldModel("Voltagem"), // double
-          TextFieldModel("Certificação"), // string
-          TextFieldModel("Capacidade Industrial"), // string
+          DoubleFieldModel("Voltagem"),
+          TextFieldModel("Certificação"),
+          TextFieldModel("Capacidade Industrial"),
         ]);
         break;
       default:

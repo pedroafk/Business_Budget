@@ -40,7 +40,6 @@ class TextFieldModel extends FormFieldModel {
     if (value.trim().length < 2) {
       return 'Deve ter pelo menos 2 caracteres';
     }
-    // Verifica se não é só números
     if (RegExp(r'^\d+\.?\d*$').hasMatch(value.trim())) {
       return 'Deve ser um texto, não apenas números';
     }
@@ -48,7 +47,6 @@ class TextFieldModel extends FormFieldModel {
   }
 }
 
-// Mantendo para compatibilidade (será substituído pelos específicos)
 class NumberFieldModel extends FormFieldModel {
   NumberFieldModel(super.label);
 

@@ -1,11 +1,8 @@
-// Engine de Regras avançada conforme requisitos técnicos
 import '../models/products/product.dart';
 import '../models/rules/business_rule.dart';
 import '../utils/mixin.dart';
 
-/// Avaliador de condições para a engine
 class ConditionEvaluator with ValidatorMixin {
-  /// Avalia uma condição baseada no produto e contexto
   bool evaluate(
     String condition,
     Product product,
@@ -38,7 +35,6 @@ class ConditionEvaluator with ValidatorMixin {
     }
   }
 
-  /// Avalia múltiplas condições com operadores lógicos
   bool evaluateComplex(
     List<String> conditions,
     String operator,
@@ -62,9 +58,7 @@ class ConditionEvaluator with ValidatorMixin {
   }
 }
 
-/// Executor de ações para a engine
 class ActionExecutor with CalculatorMixin, FormatterMixin {
-  /// Executa uma ação específica
   Map<String, dynamic> executeAction(
     String action,
     Product product,
@@ -136,16 +130,13 @@ class ActionExecutor with CalculatorMixin, FormatterMixin {
   }
 }
 
-/// Gerenciador de prioridades
 class PriorityManager {
-  /// Ordena regras por prioridade
   List<BusinessRuleConfig> sortByPriority(List<BusinessRuleConfig> rules) {
     final sorted = List<BusinessRuleConfig>.from(rules);
     sorted.sort((a, b) => a.priority.compareTo(b.priority));
     return sorted;
   }
 
-  /// Filtra regras por contexto
   List<BusinessRuleConfig> filterByContext(
     List<BusinessRuleConfig> rules,
     String context,
@@ -158,7 +149,6 @@ class PriorityManager {
   }
 }
 
-/// Configuração de regra de negócio
 class BusinessRuleConfig {
   final String id;
   final String name;
@@ -183,7 +173,6 @@ class BusinessRuleConfig {
   });
 }
 
-/// Engine de Regras Principal - Composition Pattern
 class RulesEngine {
   final ConditionEvaluator _conditionEvaluator;
   final ActionExecutor _actionExecutor;
@@ -200,9 +189,7 @@ class RulesEngine {
     _initializeDefaultRules();
   }
 
-  /// Inicializa regras padrão conforme requisitos
   void _initializeDefaultRules() {
-    // Regra de desconto por volume
     addRule(
       BusinessRuleConfig(
         id: 'volume_discount',
@@ -215,7 +202,6 @@ class RulesEngine {
       ),
     );
 
-    // Regra de taxa de urgência
     addRule(
       BusinessRuleConfig(
         id: 'urgency_fee',
@@ -228,7 +214,6 @@ class RulesEngine {
       ),
     );
 
-    // Regra de certificação obrigatória
     addRule(
       BusinessRuleConfig(
         id: 'certification_required',
@@ -241,7 +226,6 @@ class RulesEngine {
       ),
     );
 
-    // Regras de visibilidade de campos
     addRule(
       BusinessRuleConfig(
         id: 'industrial_fields',
@@ -278,7 +262,6 @@ class RulesEngine {
       ),
     );
 
-    // Regra de taxa industrial
     addRule(
       BusinessRuleConfig(
         id: 'industrial_fee',
@@ -292,17 +275,14 @@ class RulesEngine {
     );
   }
 
-  /// Adiciona uma nova regra
   void addRule(BusinessRuleConfig rule) {
     _rules.add(rule);
   }
 
-  /// Remove uma regra
   void removeRule(String id) {
     _rules.removeWhere((rule) => rule.id == id);
   }
 
-  /// Processa todas as regras para um produto e contexto
   Map<String, dynamic> processRules(
     Product product,
     String context, {
@@ -317,19 +297,15 @@ class RulesEngine {
       'validations': <String>[],
     };
 
-    // Filtra regras ativas para o contexto
     final activeRules = _priorityManager.filterByContext(
       _rules.where((rule) => rule.isActive).toList(),
       context,
     );
 
-    // Ordena por prioridade
     final sortedRules = _priorityManager.sortByPriority(activeRules);
 
-    // Processa cada regra
     for (final rule in sortedRules) {
       try {
-        // Avalia condições
         final conditionsMet = _conditionEvaluator.evaluateComplex(
           rule.conditions,
           rule.conditionOperator,
@@ -338,7 +314,6 @@ class RulesEngine {
         );
 
         if (conditionsMet) {
-          // Executa ações
           for (final action in rule.actions) {
             final actionResult = _actionExecutor.executeAction(
               action,
@@ -346,7 +321,6 @@ class RulesEngine {
               additionalContext,
             );
 
-            // Consolida resultados
             _consolidateResults(result, actionResult, rule);
           }
         }
@@ -358,7 +332,6 @@ class RulesEngine {
     return result;
   }
 
-  /// Consolida resultados das ações
   void _consolidateResults(
     Map<String, dynamic> result,
     Map<String, dynamic> actionResult,
@@ -392,12 +365,10 @@ class RulesEngine {
     }
   }
 
-  /// Retorna lista de regras ativas
   List<BusinessRuleConfig> getActiveRules() {
     return _rules.where((rule) => rule.isActive).toList();
   }
 
-  /// Ativa/desativa uma regra
   void toggleRule(String id, bool isActive) {
     final ruleIndex = _rules.indexWhere((rule) => rule.id == id);
     if (ruleIndex != -1) {
@@ -417,24 +388,20 @@ class RulesEngine {
   }
 }
 
-// Manter interface anterior para compatibilidade
 abstract class RulesEngineInterface<T> {
   void applyRules(T item, List<BusinessRule> rules);
 }
 
-// Exemplo para produtos (compatibilidade)
 class ProductRulesEngine extends RulesEngineInterface<Product> {
   final RulesEngine _engine = RulesEngine();
 
   @override
   void applyRules(Product product, List<BusinessRule> rules) {
-    // Mantém compatibilidade com interface anterior
     for (var rule in rules) {
       rule.apply(product);
     }
   }
 
-  /// Usar nova engine avançada
   Map<String, dynamic> processAdvancedRules(Product product, String context) {
     return _engine.processRules(product, context);
   }

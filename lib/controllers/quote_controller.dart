@@ -38,6 +38,4 @@ class QuoteController {
     };
     return factoryService.create(params);
   }
-
-  // Outros métodos para buscar produtos, aplicar regras, etc.
 }
